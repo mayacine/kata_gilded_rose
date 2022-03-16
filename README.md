@@ -39,3 +39,6 @@ Cependant, nous devons vous prévenir, vous ne devez en aucun cas modifier la cl
 (Vous pouvez ajouter rendre la méthode `updateQuality` statique, ainsi que des propriétés dans la classe `Item` si vous voulez, nous vous couvrirons)
 
 Juste une précision, un produit ne peut jamais voir sa qualité augmenter au-dessus de 50, cependant "Sulfuras" est un objet légendaire et comme tel sa qualité est de 80 et elle ne change jamais.
+
+#reference : 
+[https://github.com/emilybache/GildedRose-Refactoring-Kata]
