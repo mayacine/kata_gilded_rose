@@ -1,10 +1,10 @@
 class GildedRose
 
   def initialize(items)
-    @items = items
+    @items = Builder.build(items)
   end
 
-  def update_quality()
+  def update_quality_old()
     @items.each do |item|
       if item.name != "Aged Brie" and item.name != "Backstage passes to a TAFKAL80ETC concert"
         if item.quality > 0
@@ -51,6 +51,12 @@ class GildedRose
       end
     end
   end
+
+  def update_quality()
+     @items.each do |item|
+      item.sell_in, item.quality = ItemBuilder.new(item: item).build.update_quality
+     end
+  end
 end
 
 class Item
@@ -65,4 +71,58 @@ class Item
   def to_s()
     "#{@name}, #{@sell_in}, #{@quality}"
   end
+
+  def update_quality
+  end
 end
+
+class DefaultItem < Item
+  def initialize(name, sell_in, quality)
+    raise StandardError , 'cannot exceed 50' if quality > 50
+ 
+    super
+  end
+
+  def update_quality
+    self.quality -=1 unless quality.zero?
+    self.sell_in -=1 
+  end
+end
+
+class AgedBrie < DefaultItem
+  def update_quality
+  end
+end
+
+class SulfurasItem < DefaultItem
+  def update_quality
+    @sell_in, @quality
+  end
+end
+
+class BackstageItem < DefaultItem
+  def update_quality
+  end
+end
+
+class ItemBuilder
+  def initialize(item:)
+    @item = item
+  end
+
+  def build
+    class_name_item = ITEM_DICO[@item.name.to_sym] || DefaultItem
+
+    class_name_item.new(@item.name, @item.sell_in, @item.quality)
+  end
+
+  ITEM_DICO =  { 
+    "Aged Brie": AgedBrie,
+    "Sulfuras, Hand of Ragnaros": SulfurasItem,
+    "Backstage passes to a TAFKAL80ETC concert": BackstageItem
+    "Conjured": BackstageItem
+  }
+end
+
+
+
